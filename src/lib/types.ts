@@ -34,6 +34,8 @@ export interface Flag {
 
 export type Verdict = 'green' | 'yellow' | 'red';
 
+export type OpportunityType = 'invest' | 'build' | 'watch';
+
 export interface CompanyAnalysis {
   id: string;
   date: string;
@@ -42,6 +44,7 @@ export interface CompanyAnalysis {
   verdict: Verdict;
   key_insight: string;
   detailed_notes: string | null;
+  opportunity_type: OpportunityType;
   created_at: string;
 }
 
@@ -75,6 +78,43 @@ export interface SessionEntry {
   what_studied: string;
   key_insight: string;
   pillar_id: number | null;
+  created_at: string;
+}
+
+export type ThesisStatus = 'researching' | 'conviction' | 'watching' | 'passed';
+
+export interface Thesis {
+  id: string;
+  name: string;
+  description: string | null;
+  sector: string | null;
+  status: ThesisStatus;
+  key_data_points: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ThesisCompany {
+  id: string;
+  thesis_id: string;
+  company_name: string;
+  ticker: string | null;
+  role: string | null;
+  notes: string | null;
+}
+
+export interface WatchlistItem {
+  id: string;
+  company_name: string;
+  ticker: string | null;
+  sector: string | null;
+  opportunity_type: OpportunityType;
+  why_watching: string | null;
+  thesis_id: string | null;
+  price_when_added: string | null;
+  added_date: string;
+  is_analyzed: boolean;
+  company_analysis_id: string | null;
   created_at: string;
 }
 

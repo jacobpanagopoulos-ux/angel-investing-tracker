@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Pillar, Concept, Flag, SessionEntry, Milestone, CompanyAnalysis } from '@/lib/types';
+import { Pillar, Concept, Flag, SessionEntry, Milestone, CompanyAnalysis, Thesis, WatchlistItem } from '@/lib/types';
 import { pillarColors, pillarBgColors, pillarTextColors, calculateProgress, milestoneStatusColors } from '@/lib/utils';
 import ProgressRing from '@/components/progress-ring';
 import StatusBadge from '@/components/status-badge';
@@ -15,6 +15,8 @@ interface DashboardData {
   sessions: SessionEntry[];
   milestones: Milestone[];
   companies: CompanyAnalysis[];
+  theses: Thesis[];
+  watchlist: WatchlistItem[];
 }
 
 export default function Dashboard() {
@@ -22,13 +24,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function load() {
-      const [pillars, concepts, flags, sessions, milestones, companies] = await Promise.all([
+      const [pillars, concepts, flags, sessions, milestones, companies, theses, watchlist] = await Promise.all([
         supabase.from('pillars').select('*').order('sort_order'),
         supabase.from('concepts').select('*').order('sort_order'),
         supabase.from('flags').select('*').order('sort_order'),
         supabase.from('session_log').select('*').order('date', { ascending: false }).limit(5),
         supabase.from('milestones').select('*').order('sort_order'),
         supabase.from('company_analyses').select('*').order('created_at', { ascending: false }),
+        supabase.from('theses').select('*'),
+        supabase.from('watchlist').select('*'),
       ]);
       setData({
         pillars: pillars.data || [],
@@ -37,6 +41,8 @@ export default function Dashboard() {
         sessions: sessions.data || [],
         milestones: milestones.data || [],
         companies: companies.data || [],
+        theses: theses.data || [],
+        watchlist: watchlist.data || [],
       });
     }
     load();
@@ -105,7 +111,7 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-6 gap-4 mb-8">
         <div className="card text-center">
           <p className="text-2xl font-bold" style={{ color: 'var(--accent-emerald)' }}>{totalConcepts}</p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Total Skills</p>
@@ -119,8 +125,16 @@ export default function Dashboard() {
           <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Mastered</p>
         </div>
         <div className="card text-center">
-          <p className="text-2xl font-bold" style={{ color: 'var(--accent-purple)' }}>{data.companies.length}</p>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Companies Analyzed</p>
+          <p className="text-2xl font-bold" style={{ color: 'var(--accent-purple)' }}>{data.theses.length}</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Theses</p>
+        </div>
+        <div className="card text-center">
+          <p className="text-2xl font-bold" style={{ color: 'var(--accent-amber)' }}>{data.watchlist.length}</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Watchlist</p>
+        </div>
+        <div className="card text-center">
+          <p className="text-2xl font-bold" style={{ color: 'var(--accent-red)' }}>{data.companies.length}</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Analyzed</p>
         </div>
       </div>
 

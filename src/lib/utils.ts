@@ -1,4 +1,4 @@
-import { ConceptStatus, FlagStatus, Verdict, MilestoneStatus } from './types';
+import { ConceptStatus, FlagStatus, Verdict, MilestoneStatus, ThesisStatus, OpportunityType } from './types';
 
 export const statusColors: Record<ConceptStatus, { bg: string; text: string; label: string }> = {
   not_started: { bg: 'bg-zinc-700/50', text: 'text-zinc-400', label: 'Not Started' },
@@ -43,6 +43,19 @@ export const pillarTextColors: Record<number, string> = {
   1: 'text-emerald-400',
   2: 'text-purple-400',
   3: 'text-blue-400',
+};
+
+export const thesisStatusColors: Record<ThesisStatus, { bg: string; text: string; label: string }> = {
+  researching: { bg: 'bg-amber-900/40', text: 'text-amber-400', label: 'Researching' },
+  conviction: { bg: 'bg-emerald-900/40', text: 'text-emerald-400', label: 'Conviction' },
+  watching: { bg: 'bg-blue-900/40', text: 'text-blue-400', label: 'Watching' },
+  passed: { bg: 'bg-zinc-700/50', text: 'text-zinc-400', label: 'Passed' },
+};
+
+export const opportunityTypeColors: Record<OpportunityType, { bg: string; text: string; label: string }> = {
+  invest: { bg: 'bg-emerald-900/40', text: 'text-emerald-400', label: 'Invest' },
+  build: { bg: 'bg-purple-900/40', text: 'text-purple-400', label: 'Build' },
+  watch: { bg: 'bg-blue-900/40', text: 'text-blue-400', label: 'Watch' },
 };
 
 export function calculateProgress(items: { status: string }[], countStatuses: string[]): number {

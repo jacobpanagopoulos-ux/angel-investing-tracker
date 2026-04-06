@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { CompanyAnalysis, Flag, Verdict } from '@/lib/types';
-import { verdictColors } from '@/lib/utils';
+import { CompanyAnalysis, Flag, Verdict, OpportunityType } from '@/lib/types';
+import { verdictColors, opportunityTypeColors } from '@/lib/utils';
 import StatusBadge from '@/components/status-badge';
 import Link from 'next/link';
 
@@ -17,6 +17,7 @@ export default function CompaniesPage() {
     verdict: 'yellow' as Verdict,
     key_insight: '',
     detailed_notes: '',
+    opportunity_type: 'invest' as OpportunityType,
     date: new Date().toISOString().split('T')[0],
     selectedFlags: [] as string[],
   });
@@ -41,6 +42,7 @@ export default function CompaniesPage() {
       verdict: form.verdict,
       key_insight: form.key_insight,
       detailed_notes: form.detailed_notes || null,
+      opportunity_type: form.opportunity_type,
       date: form.date,
     }).select().single();
 
@@ -58,7 +60,7 @@ export default function CompaniesPage() {
     }
     setForm({
       company_name: '', vertical: '', verdict: 'yellow', key_insight: '',
-      detailed_notes: '', date: new Date().toISOString().split('T')[0], selectedFlags: [],
+      detailed_notes: '', opportunity_type: 'invest' as OpportunityType, date: new Date().toISOString().split('T')[0], selectedFlags: [],
     });
     setShowForm(false);
   }
@@ -113,7 +115,30 @@ export default function CompaniesPage() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="text-xs block mb-1" style={{ color: 'var(--text-secondary)' }}>Type</label>
+              <div className="flex gap-2 mt-1">
+                {(['invest', 'build', 'watch'] as OpportunityType[]).map(ot => {
+                  const otc = opportunityTypeColors[ot];
+                  return (
+                    <button
+                      key={ot}
+                      type="button"
+                      onClick={() => setForm(p => ({ ...p, opportunity_type: ot }))}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                        form.opportunity_type === ot
+                          ? `${otc.bg} ${otc.text} border-current`
+                          : 'border-[var(--border)]'
+                      }`}
+                      style={form.opportunity_type !== ot ? { color: 'var(--text-muted)' } : undefined}
+                    >
+                      {otc.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div>
               <label className="text-xs block mb-1" style={{ color: 'var(--text-secondary)' }}>Date</label>
               <input
@@ -238,6 +263,7 @@ export default function CompaniesPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{c.date}</span>
+                    {c.opportunity_type && <StatusBadge {...opportunityTypeColors[c.opportunity_type]} />}
                     <StatusBadge {...verdictColors[c.verdict]} />
                   </div>
                 </div>
