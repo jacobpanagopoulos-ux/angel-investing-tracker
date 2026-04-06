@@ -1,0 +1,2 @@
+INSERT INTO session_log (date, what_studied, key_insight, pillar_id) VALUES
+('2026-04-06', 'Gemini: Screens 3-5 component code + Zustand state management for cross-screen reactivity', 'All 5 MVP screens have component code. Zustand store connects Screen 1 (ticker) to Screen 2 (dial): when industrialPct >= 50, base penalty drops 65%. Screen 3: Tremor Table with 6 mock docs + Generate Binder button. Screen 4: dual slider REC simulator with grouped BarChart. Screen 5: 3 facility risk cards with Grandfathering Checklist accordion. Ready to build in Sentinel codebase.', NULL);
